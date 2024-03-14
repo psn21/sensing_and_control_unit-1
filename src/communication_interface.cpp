@@ -43,8 +43,8 @@ void sendOrientation(float roll, float pitch, float yaw)
     orientation_msg.z = yaw;
     orientation_pub.publish(&orientation_msg);
 }
-void throttleCb(const std_msgs::Int8MultiArray& pwm_msg){
-    int8_t pwm_values[NUMBER_OF_THRUSTERS];
+void throttleCb(const std_msgs::Int32MultiArray& pwm_msg){
+    int32_t pwm_values[NUMBER_OF_THRUSTERS];
     for (int thruster_index = 0; thruster_index < NUMBER_OF_THRUSTERS; thruster_index ++)
     {
         pwm_values[thruster_index] = pwm_msg.data[thruster_index];

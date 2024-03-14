@@ -1,12 +1,4 @@
 #include "sensor_interface.hpp"
-#include "sensor_math.hpp"
-#include <mpu6050.hpp>
-#include "Adafruit_FXOS8700.h"
-#include "MS5837.h"
-
-MPU6050 gyro;
-Adafruit_FXOS8700 accelmag = Adafruit_FXOS8700(ACCEL_ID , MAG_ID);
-MS5837 depth_sensor;
 
  void initializeIMU() 
 {
@@ -22,7 +14,7 @@ MS5837 depth_sensor;
  void initializeDepthSensor() 
 {
     bool depth_sensor_status= depth_sensor.init();
-    
+    depth_sensor.setModel(MS5837::MS5837_30BA);
     depth_sensor.setFluidDensity(997); // kg/m^3 (freshwater, 1029 for seawater)
 }
 
@@ -31,7 +23,9 @@ MS5837 depth_sensor;
     sensors_event_t accel_event,mag_event;
     accelmag.getEvent(&accel_event,&mag_event);
     
-    gyro.getSensorsReadings(ax, ay, az, gx, gy, gz);
+    gyro.getSensorsReadings(ay, ax, az, gy, gx, gz);
+    ay = -ay;
+    gy = -gy;
 
     mx=mag_event.magnetic.x;
     my=mag_event.magnetic.y;

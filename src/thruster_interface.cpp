@@ -42,7 +42,7 @@ void initializeThrusters(){
 //     g_thrusters[thruster_index].writeMicroseconds(pwm_value);
 //   }
 // }
-void setThrusterThrottle(const int8_t *pwm_values){
+void setThrusterThrottle(const int32_t *pwm_values){
   int pwm_value;
   for (int thruster_index = 0; thruster_index < NUMBER_OF_THRUSTERS; thruster_index++){
     pwm_value = pwm_values[thruster_index];

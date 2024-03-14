@@ -6,5 +6,8 @@
 #include "sensor_math.hpp"
 #include "thruster_interface.hpp"
 #include <Arduino.h>
+
+#define UPDATE_RATE 10
+#define PUBLISH_RATE 10
 // #include <ros.h>
 #endif // MAIN_HPP
