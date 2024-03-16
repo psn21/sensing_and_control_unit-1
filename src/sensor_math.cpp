@@ -117,36 +117,25 @@ void applyIMUCalibration(float &ax, float &ay, float &az, float &gx, float &gy, 
 
 void updateOrientation(float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz, float &roll, float &pitch, float &yaw)
 {
-    float _roll, _pitch, _yaw;
-    gyroscope = {gx, gy, gz}; 
-    accelerometer = {ax, ay, az}; 
-    magnetometer = {mx, my, mz};
-    current_time=millis();
-    deltaTime=current_time-prev_time;
-    prev_time = current_time;
-    if (start)
-    {
-         start = !start;
-         deltaTime = 0;
-    }
-    FusionAhrsUpdate(&ahrs, gyroscope, accelerometer, magnetometer, deltaTime);
-    const FusionEuler rotation = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
-    const FusionVector translation = FusionAhrsGetEarthAcceleration(&ahrs);
+  FusionVector accelerometer = {ax, ay, az};
+  FusionVector gyroscope = { gx, gy, gz};
+  FusionVector magnetometer = { mx, my, mz};
+  current_time= millis();
+  deltaTime = current_time-prev_time;
+  prev_time=current_time;
+  if(start)
+  {
+    start=!start;
+    deltaTime=0;
+  }
 
-    _roll =rotation.angle.roll;
-    _pitch = rotation.angle.pitch;
-    _yaw = rotation.angle.yaw;
-     
-     roll = _roll;
-     pitch = _pitch;
-     yaw= _yaw;
-    
-  
-    // roll = 0.9 * roll + 0.1 * _roll;
-    // pitch = 0.9 * pitch + 0.1 * _pitch;
-    // yaw = 0.9 * yaw + 0.1 * _yaw;
+  FusionAhrsUpdate(&ahrs, gyroscope, accelerometer, magnetometer, deltaTime);
 
-    ax=translation.axis.x;
-    ay=translation.axis.y;
-    az=translation.axis.z;
+  const FusionEuler orientation = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
+  const FusionVector earth_acceleration = FusionAhrsGetEarthAcceleration(&ahrs);
+
+  roll = orientation.angle.roll;
+  pitch = orientation.angle.pitch;
+  yaw = orientation.angle.yaw;
+
 }
