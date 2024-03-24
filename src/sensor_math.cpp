@@ -142,10 +142,6 @@ void updateOrientation(float ax, float ay, float az, float gx, float gy,
     yaw += 360;
   }
 
-  // roll = 0.9 * roll + 0.1 * _roll;
-  // pitch = 0.9 * pitch + 0.1 * _pitch;
-  // yaw = 0.9 * yaw + 0.1 * _yaw;
-
   // ax=translation.axis.x;
   // ay=translation.axis.y;
   // az=translation.axis.z;
