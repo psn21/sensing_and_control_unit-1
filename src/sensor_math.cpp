@@ -132,6 +132,12 @@ void updateOrientation(float ax, float ay, float az, float gx, float gy,
   roll = rotation.angle.roll;
   pitch = -rotation.angle.pitch;
   yaw = rotation.angle.yaw;
+  if (roll < 0) {
+    roll += 360;
+  }
+  if (pitch < 0) {
+    pitch += 360;
+  }
   if (yaw < 0) {
     yaw += 360;
   }
