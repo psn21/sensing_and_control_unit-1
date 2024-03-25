@@ -10,7 +10,7 @@ sensor_msgs::MagneticField magneticField;
 geometry_msgs::Vector3 orientation_RPY;
 std_msgs::Int32MultiArray pwm_values;
 std_msgs::Float32 depth_data;
-
+std_msgs::Bool calibration_status;
 ros::NodeHandle nh;
 
 ros::Publisher linearAccelerationPub("/sensors/linear_acceleration",
@@ -21,10 +21,14 @@ ros::Publisher magneticFieldPub("/sensors/magnetic_field", &magneticField);
 ros::Publisher OrientationRPYPub("/sensors/orientation", &orientation_RPY);
 ros::Publisher DepthDataPub("/sensors/depth", &depth_data);
 ros::Subscriber<std_msgs::Int32MultiArray> PWMsub("/control/pwm", &throttleCb);
+ros::Subscriber<std_msgs::Bool> calibrationSub("/control/calibration",
+                                               &calibrationCb);
+ros::Subscriber<std_msgs::Int16> diagnosticSub("/control/led", &ledCb);
 
 void initializeCommunication() {
   nh.initNode();
   nh.subscribe(PWMsub);
+  nh.subscribe(calibrationSub);
   nh.advertise(linearAccelerationPub);
   nh.advertise(AngularVelocityPub);
   nh.advertise(magneticFieldPub);
