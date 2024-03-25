@@ -4,7 +4,7 @@
 #include <ros.h>
 
 #include "mpu6050.hpp"
-#define NO_OF_SAMPLES 10000
+#define NO_OF_SAMPLES 3000
 
 extern ros::NodeHandle nh;
 
