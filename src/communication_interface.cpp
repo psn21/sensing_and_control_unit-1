@@ -73,6 +73,7 @@ void throttleCb(const std_msgs::Int32MultiArray& pwm_msg) {
 
 void calibrationCb(const std_msgs::Bool& calibration_status) {
   bool calibration_mode = calibration_status.data;
+  nh.loginfo("Calibration Mode received.");
   callUpdateOffset(calibration_mode);
 }
 
