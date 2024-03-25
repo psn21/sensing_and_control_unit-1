@@ -72,14 +72,16 @@ void updateOffset(MPU6050 gyro) {
   gyroscopeOffset.array[1] /= NO_OF_SAMPLES;
   gyroscopeOffset.array[2] /= NO_OF_SAMPLES;
   accelerometerOffset.array[2] -= 1;
-  Serial.println("accelerometerOffset: ");
-  Serial.println(accelerometerOffset.array[0]);
-  Serial.println(accelerometerOffset.array[1]);
-  Serial.println(accelerometerOffset.array[2]);
-  Serial.println("gyroscopeOffset: ");
-  Serial.println(gyroscopeOffset.array[0]);
-  Serial.println(gyroscopeOffset.array[1]);
-  Serial.println(gyroscopeOffset.array[2]);
+
+  nh.loginfo("Imu calibrated.");
+  // double dtostrf(gyrosc, min_width, num_digits_after_decimal,
+  // where_to_store_string); ROS_INFO("Gyroscope offsets:\ngx=%d ,gy =%d ,gz=%d
+  // .",
+  //          gyroscopeOffset.array[0], gyroscopeOffset.array[1],
+  //          gyroscopeOffset.array[2]);
+  // ROS_INFO("Accelerometer offsets:\nax=%d ,ay =%d ,az=%d .",
+  //          accelerometerOffset.array[0], accelerometerOffset.array[1],
+  //          accelerometerOffset.array[2]);
 }
 void applyIMUCalibration(float &ax, float &ay, float &az, float &gx, float &gy,
                          float &gz, float &mx, float &my, float &mz) {

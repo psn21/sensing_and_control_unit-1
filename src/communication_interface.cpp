@@ -1,22 +1,24 @@
 #include "communication_interface.hpp"
 
 #include "config.hpp"
+#include "diagnostics.hpp"
 #include "thruster_interface.hpp"
 
-geometry_msgs::Vector3 linear_acceleration;
-geometry_msgs::Vector3 angular_velocity;
-sensor_msgs::MagneticField magnetic_field;
-geometry_msgs::Vector3 orientation;
+geometry_msgs::Vector3 linearAcceleration;
+geometry_msgs::Vector3 angularVelocity;
+sensor_msgs::MagneticField magneticField;
+geometry_msgs::Vector3 orientation_RPY;
 std_msgs::Int32MultiArray pwm_values;
 std_msgs::Float32 depth_data;
 
 ros::NodeHandle nh;
+
 ros::Publisher linearAccelerationPub("/sensors/linear_acceleration",
-                                     &linear_acceleration);
+                                     &linearAcceleration);
 ros::Publisher AngularVelocityPub("/sensors/angular_velocity",
-                                  &angular_velocity);
-ros::Publisher magneticFieldPub("/sensors/magnetic_field", &magnetic_field);
-ros::Publisher OrientationRPYPub("/sensors/orientation", &orientation);
+                                  &angularVelocity);
+ros::Publisher magneticFieldPub("/sensors/magnetic_field", &magneticField);
+ros::Publisher OrientationRPYPub("/sensors/orientation", &orientation_RPY);
 ros::Publisher DepthDataPub("/sensors/depth", &depth_data);
 ros::Subscriber<std_msgs::Int32MultiArray> PWMsub("/control/pwm", &throttleCb);
 
@@ -37,28 +39,28 @@ void sendDepth(float depth) {
 
 void sendIMUReadings(float ax, float ay, float az, float gx, float gy, float gz,
                      float mx, float my, float mz) {
-  linear_acceleration.x = ax * G;
-  linear_acceleration.y = ay * G;
-  linear_acceleration.z = az * G;
+  linearAcceleration.x = ax * G;
+  linearAcceleration.y = ay * G;
+  linearAcceleration.z = az * G;
 
-  angular_velocity.x = gx;
-  angular_velocity.y = gy;
-  angular_velocity.z = gz;
+  angularVelocity.x = gx;
+  angularVelocity.y = gy;
+  angularVelocity.z = gz;
 
-  magnetic_field.magnetic_field.x = mx;
-  magnetic_field.magnetic_field.y = my;
-  magnetic_field.magnetic_field.z = mz;
+  magneticField.magnetic_field.x = mx;
+  magneticField.magnetic_field.y = my;
+  magneticField.magnetic_field.z = mz;
 
-  linearAccelerationPub.publish(&linear_acceleration);
-  AngularVelocityPub.publish(&angular_velocity);
-  magneticFieldPub.publish(&magnetic_field);
+  linearAccelerationPub.publish(&linearAcceleration);
+  AngularVelocityPub.publish(&angularVelocity);
+  magneticFieldPub.publish(&magneticField);
 }
 
 void sendOrientation(float roll, float pitch, float yaw) {
-  orientation.x = roll;
-  orientation.y = pitch;
-  orientation.z = yaw;
-  OrientationRPYPub.publish(&orientation);
+  orientation_RPY.x = roll;
+  orientation_RPY.y = pitch;
+  orientation_RPY.z = yaw;
+  OrientationRPYPub.publish(&orientation_RPY);
 }
 void throttleCb(const std_msgs::Int32MultiArray& pwm_msg) {
   int32_t pwm_values[NUMBER_OF_THRUSTERS];
@@ -67,6 +69,16 @@ void throttleCb(const std_msgs::Int32MultiArray& pwm_msg) {
     pwm_values[thruster_index] = pwm_msg.data[thruster_index];
   }
   setThrusterThrottle(pwm_values);
+}
+
+void calibrationCb(const std_msgs::Bool& calibration_status) {
+  bool calibration_mode = calibration_status.data;
+  callUpdateOffset(calibration_mode);
+}
+
+void ledCb(const std_msgs::Int16& led_msg) {
+  int16_t led_indicator = led_msg.data;
+  setLED(led_indicator);
 }
 
 void checkForCommands() { nh.spinOnce(); }

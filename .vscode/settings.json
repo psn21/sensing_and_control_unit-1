@@ -1,0 +1,15 @@
+{
+    // Place your settings here
+    // This file is used to configure Visual Studio Code settings
+    // You can override default settings and add your own customizations
+    // Editor settings
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.wordWrap": "on",
+    "editor.formatOnSave": true,
+    "clang-format.language.cpp.style": "google",
+    "files.associations": {
+        "random": "cpp",
+        "cstdarg": "cpp"
+    },
+}
